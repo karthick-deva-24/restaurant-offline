@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stackly | The Full Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Arial&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0a0a;
+            --accent: #fab1a0;
+            --white: #ffffff;
+            --dark-gray: #111111;
+            --muted: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--primary); color: var(--white); font-family: 'Arial', sans-serif; line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; letter-spacing: 1px; }
+
+        /* Navigation */
+        nav {
+            position: sticky; top: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 8%; z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo { font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-family: 'Playfair Display'; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; list-style: none; }
+        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content {
+            display: none; position: absolute; background: #111; 
+            min-width: 180px; top: 100%; left: 30px; border: 1px solid #333; 
+        }
+        .dropdown-content a { margin: 0; padding: 12px 20px; display: block; border-bottom: 1px solid #222; text-transform: none; font-size: 0.75rem; }
+
+        /* Header */
+        .menu-header { padding: 80px 8% 40px; text-align: center; background: var(--dark-gray); }
+        .menu-header h1 { font-size: 3.5rem; margin-bottom: 10px; }
+        .menu-header p { font-size: 0.9rem; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 40px; }
+
+        /* Category Nav */
+        .category-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .cat-link { text-decoration: none; color: var(--white); border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; font-size: 0.7rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; transition: 0.4s; }
+        .cat-link:hover { border-color: var(--accent); background: var(--accent); color: var(--primary); }
+
+        /* Grid */
+        .container { padding: 0 8% 80px; }
+        .section-title { font-size: 2rem; margin: 50px 0 30px; border-left: 3px solid var(--accent); padding-left: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+
+        /* Item Cards */
+        .item-card { background: #0f0f0f; border: 1px solid #222; transition: 0.4s; }
+        .item-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .item-img { width: 100%; height: 200px; object-fit: cover; opacity: 0.7; transition: 0.4s; }
+        .item-card:hover .item-img { opacity: 1; }
+        .item-body { padding: 20px; }
+        .item-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+        .item-top h3 { font-size: 1.2rem; }
+        .price { color: var(--accent); font-weight: bold; font-family: 'Arial'; }
+        .desc { font-size: 0.85rem; color: #777; margin-bottom: 15px; min-height: 40px; }
+        .tag { font-size: 0.6rem; border: 1px solid #333; padding: 3px 8px; color: var(--muted); text-transform: uppercase; }
+
+        footer { padding: 60px 8% 30px; background: var(--primary); border-top: 1px solid #1a1a1a; text-align: center; color: #444; font-size: 0.7rem; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+<nav>
+        <div class="logo">STACK<span>LY.</span></div>
+        <ul class="nav-links">
+            <li class="dropdown">
+                <a href="index.html">Home <i class="fas fa-chevron-down" style="font-size:0.6rem"></i></a>
+                <div class="dropdown-content">
+                    <a href="index.html">Home Style 1</a>
+                    <a href="home2.html">Home Style 2</a>
+                </div>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="service.html">Services</a></li>
+            <li><a href="contact.html" class="active-link">Contact</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+    </nav>
+    <section class="menu-header">
+        <h1>The Full Stack</h1>
+        <p>25 Signature Layers of Taste</p>
+        <div class="category-nav">
+            <a href="#breakfast" class="cat-link">Breakfast</a>
+            <a href="#mains" class="cat-link">Mains</a>
+            <a href="#greens" class="cat-link">Greens</a>
+            <a href="#sides" class="cat-link">Sides</a>
+            <a href="#sweets" class="cat-link">Sweets</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 id="breakfast" class="section-title">Breakfast Stacks</h2>
+        <div class="menu-grid">
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Buttermilk Classic</h3><span class="price">$12</span></div><p class="desc">Triple-stacked pancakes with organic maple glaze.</p><span class="tag">Chef's Favorite</span></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Avocado Toast</h3><span class="price">$14</span></div><p class="desc">Sourdough, smashed avocado, and chili flakes.</p><span class="tag">Vegan</span></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1484723088339-fe2a7a8e1082?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Brioche Tower</h3><span class="price">$15</span></div><p class="desc">Vanilla bean custard french toast with berries.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Salmon Bagel</h3><span class="price">$16</span></div><p class="desc">Premium lox, capers, and red onion layers.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1538102223943-9efed3a09458?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>English Stack</h3><span class="price">$17</span></div><p class="desc">Poached eggs, bacon, and grilled tomatoes.</p></div></div>
+        </div>
+
+        <h2 id="mains" class="section-title">Main Layers</h2>
+        <div class="menu-grid">
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Wagyu Burger</h3><span class="price">$22</span></div><p class="desc">Double wagyu beef, aged cheddar, and truffle aioli.</p><span class="tag">Signature</span></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Truffle Pizza</h3><span class="price">$18</span></div><p class="desc">Wild mushrooms, mozzarella, and truffle oil.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Smoked Ribs</h3><span class="price">$26</span></div><p class="desc">24-hour slow-cooked ribs with honey-glaze.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Glazed Salmon</h3><span class="price">$24</span></div><p class="desc">Atlantic salmon over a stack of asparagus.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Spicy Penne</h3><span class="price">$17</span></div><p class="desc">Handmade pasta with arabiata sauce and garlic.</p></div></div>
+        </div>
+
+        <h2 id="greens" class="section-title">Greens & Bowls</h2>
+        <div class="menu-grid">
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Cobb Stack</h3><span class="price">$15</span></div><p class="desc">Avocado, bacon, and ranch over fresh kale.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Mediterranean</h3><span class="price">$14</span></div><p class="desc">Hummus, feta, and warm pita wedges.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Classic Caesar</h3><span class="price">$13</span></div><p class="desc">Romaine hearts with house-made dressing.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Tofu Bowl</h3><span class="price">$15</span></div><p class="desc">Crispy tofu and ginger-soy quinoa.</p><span class="tag">Vegan</span></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Steak Salad</h3><span class="price">$19</span></div><p class="desc">Sliced sirloin over seasonal field greens.</p></div></div>
+        </div>
+
+        <h2 id="sides" class="section-title">Artisan Sides</h2>
+        <div class="menu-grid">
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1573082833947-3e93d18b8de9?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Truffle Fries</h3><span class="price">$9</span></div><p class="desc">Hand-cut with parmesan and rosemary.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Charred Asparagus</h3><span class="price">$8</span></div><p class="desc">Grilled with lemon zest and sea salt.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1512058560566-43346cf0c1df?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Sweet Wedges</h3><span class="price">$7</span></div><p class="desc">Crispy sweet potato with chipotle dip.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Fried Calamari</h3><span class="price">$14</span></div><p class="desc">Lightly battered with lemon aioli.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1541014741259-df549fa3367d?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Mac & Cheese</h3><span class="price">$10</span></div><p class="desc">Five-cheese blend with herb crust.</p></div></div>
+        </div>
+
+        <h2 id="sweets" class="section-title">Sweet Finishes</h2>
+        <div class="menu-grid">
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Red Velvet</h3><span class="price">$11</span></div><p class="desc">Moist layers with cream cheese frost.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Molten Cake</h3><span class="price">$12</span></div><p class="desc">Dark chocolate center with vanilla bean.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>NYC Cheesecake</h3><span class="price">$10</span></div><p class="desc">Berry compote and graham crust.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Lemon Tart</h3><span class="price">$9</span></div><p class="desc">Zesty curd in a shortbread shell.</p></div></div>
+            <div class="item-card"><img src="https://images.unsplash.com/photo-1509460913899-515f1df349ec?w=400" class="item-img"><div class="item-body"><div class="item-top"><h3>Warm Cookies</h3><span class="price">$7</span></div><p class="desc">Triple chocolate with sea salt flakes.</p></div></div>
+        </div>
+    </div>
+
+    <footer>
+        <style>
+        .footer-link {
+            display: block;
+            color: #777;
+            text-decoration: none;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-link:hover {
+            color: #fab1a0; /* Signature Accent */
+            transform: translateX(8px); /* Subtle slide effect */
+        }
+
+        .footer-social-link {
+            display: inline-block;
+            color: #777;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .footer-social-link:hover {
+            color: #fab1a0;
+            transform: translateY(-5px); /* Upward float effect */
+        }
+    </style>
+
+    <footer style="padding: 100px 8% 40px; background: #0a0a0a; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 100px;">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 50px;">
+            
+            <div class="footer-col">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #ffffff;">STACK<span style="color: #fab1a0;">LY.</span></h3>
+                <p style="color: #666; margin-top: 15px; font-size: 0.85rem; line-height: 1.6;">Redefining urban dining through the lens of architectural gastronomy since 2024.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4 style="color: #fab1a0; margin-bottom: 25px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;">Explore</h4>
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="about.html" class="footer-link">Our Story</a>
+                <a href="service.html" class="footer-link">Services</a>
+            </div>
+
+            <div class="footer-col">
+                <h4 style="color: #fab1a0; margin-bottom: 25px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;">Visit</h4>
+                <p style="color: #777; font-size: 0.85rem; margin-bottom: 12px;">123 Culinary Ave, NY</p>
+                <p style="color: #777; font-size: 0.85rem; margin-bottom: 12px;">+1 (555) 987-6543</p>
+                <a href="mailto:hello@stackly.com" class="footer-link">hello@stackly.com</a>
+            </div>
+
+            <div class="footer-col">
+                <h4 style="color: #fab1a0; margin-bottom: 25px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;">Follow</h4>
+                <div style="display: flex; gap: 15px;">
+                    <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center; padding-top: 50px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 50px; color: #444; font-size: 0.7rem; letter-spacing: 1px;">
+            &copy; 2026 STACKLY RESTAURANT GROUP. EXPERTLY STACKED. EXPERTLY SERVED.
+        </div>
+    </footer>
+</body>
+</html>
+   

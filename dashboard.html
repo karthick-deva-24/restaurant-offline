@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stackly | Member Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Arial&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0a0a;
+            --accent: #fab1a0;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(250, 177, 160, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: var(--primary); 
+            color: var(--white); 
+            font-family: 'Arial', sans-serif; 
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; letter-spacing: 1px; }
+
+        /* --- NAVIGATION (Synced with Homepage) --- */
+        nav {
+            position: sticky; top: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 8%; z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .logo { font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-family: 'Playfair Display'; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; list-style: none; }
+        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content {
+            display: none; position: absolute; background: #111; 
+            min-width: 180px; top: 100%; left: 30px; border: 1px solid #333; 
+        }
+        .dropdown-content a { margin: 0; padding: 12px 20px; display: block; border-bottom: 1px solid #222; text-transform: none; font-size: 0.75rem; }
+
+        /* --- DASHBOARD LAYOUT --- */
+        .dashboard-container { padding: 60px 8%; max-width: 1400px; margin: 0 auto; }
+        
+        .welcome-header { margin-bottom: 50px; opacity: 0; animation: fadeInUp 0.8s forwards; }
+        .welcome-header h1 { font-size: 3rem; margin-bottom: 10px; }
+        .welcome-header p { color: var(--accent); text-transform: uppercase; letter-spacing: 3px; font-size: 0.8rem; }
+
+        /* --- STATS GRID --- */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 25px; 
+            margin-bottom: 50px;
+        }
+        
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 4px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px var(--glow);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .stat-card i { color: var(--accent); font-size: 1.5rem; margin-bottom: 20px; display: block; }
+        .stat-card h3 { font-size: 2.2rem; margin-bottom: 5px; }
+        .stat-card p { color: #888; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 2px; }
+
+        /* --- RECENT ACTIVITY & RESERVATIONS --- */
+        .content-flex { display: grid; grid-template-columns: 2fr 1.2fr; gap: 30px; }
+
+        .dashboard-box {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.4s forwards;
+        }
+
+        .dashboard-box h2 { margin-bottom: 30px; font-size: 1.8rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
+
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; padding: 15px 0; }
+        td { padding: 20px 0; border-bottom: 1px solid var(--glass-border); font-size: 0.9rem; color: #ccc; transition: 0.3s; }
+        tr:hover td { color: var(--white); }
+
+        .status-badge { 
+            padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; 
+            font-weight: bold; background: rgba(250, 177, 160, 0.1); color: var(--accent); 
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Staggered load for cards */
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @media (max-width: 1024px) {
+            .content-flex { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<nav>
+        <div class="logo">STACK<span>LY.</span></div>
+        <ul class="nav-links">
+            <li class="dropdown">
+                <a href="index.html">Home <i class="fas fa-chevron-down" style="font-size:0.6rem"></i></a>
+                <div class="dropdown-content">
+                    <a href="index.html">Home Style 1</a>
+                    <a href="home2.html">Home Style 2</a>
+                </div>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="service.html">Services</a></li>
+            <li><a href="contact.html" class="active-link">Contact</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <main class="dashboard-container">
+        <header class="welcome-header">
+            <p>Exclusive Member Access</p>
+            <h1>Welcome back</h1>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-utensils"></i>
+                <h3>12</h3>
+                <p>Total Visits</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <h3>1,450</h3>
+                <p>Stack Points</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-gem"></i>
+                <h3>Gold</h3>
+                <p>Member Status</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calendar-check"></i>
+                <h3>1</h3>
+                <p>Upcoming Bookings</p>
+            </div>
+        </section>
+
+        <section class="content-flex">
+            <div class="dashboard-box">
+                <h2>Recent Dining History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Experience</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>March 02, 2026</td>
+                            <td>Fine Dining Tasting</td>
+                            <td>$184.00</td>
+                            <td><span class="status-badge">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Feb 24, 2026</td>
+                            <td>Chef's Table Event</td>
+                            <td>$310.00</td>
+                            <td><span class="status-badge">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Feb 12, 2026</td>
+                            <td>Artisan Brunch</td>
+                            <td>$65.00</td>
+                            <td><span class="status-badge">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="dashboard-box">
+                <h2>Quick Actions</h2>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <button style="background: var(--accent); color: var(--primary); padding: 15px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;">
+                        Book New Table
+                    </button>
+                    <button style="background: transparent; border: 1px solid var(--glass-border); color: var(--white); padding: 15px; cursor: pointer; transition: 0.3s;">
+                        Modify Profile
+                    </button>
+                    <button style="background: transparent; border: 1px solid var(--glass-border); color: var(--white); padding: 15px; cursor: pointer; transition: 0.3s;">
+                        Redeem Points
+                    </button>
+                </div>
+                <div style="margin-top: 40px; padding: 20px; border: 1px dashed var(--accent); text-align: center;">
+                    <p style="font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;">Your Next Reward</p>
+                    <p style="margin-top: 10px; font-weight: bold;">Complimentary Zenith Stack</p>
+                    <p style="font-size: 0.7rem; color: #666; margin-top: 5px;">50 points remaining</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
