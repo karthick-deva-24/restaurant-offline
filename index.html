@@ -14,91 +14,208 @@
             --muted: #888888;
             --dark-gray: #111111;
             --border: rgba(255, 255, 255, 0.1);
-            --transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+            --transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--primary); color: var(--white); font-family: 'Arial', sans-serif; line-height: 1.8; overflow-x: hidden; scroll-behavior: smooth; }
+        body { 
+            background-color: var(--primary); 
+            color: var(--white); 
+            font-family: 'Arial', sans-serif; 
+            line-height: 1.8; 
+            overflow-x: hidden; 
+            scroll-behavior: smooth; 
+        }
+        
         h1, h2, h3 { font-family: 'Playfair Display', serif; letter-spacing: 1px; }
 
-        .reveal { opacity: 0; transform: translateY(50px); transition: var(--transition); }
+        /* --------------- CSS LOGO CROPPING HELPER --------------- */
+        /* To show only the S icon part of the logo image - FIXED WIDTH & MARGIN */
+        .icon-only-logo {
+            width: 34px;          /* Reduced width to perfectly hide the text in the image */
+            height: 40px;         
+            object-fit: cover;
+            object-position: left center; 
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;   /* Added spacing between the icon and the text */
+        }
+
+        .brand-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--white);
+            vertical-align: middle;
+        }
+
+        /* --------------- PRELOADER (SIMPLE SPINNING CIRCLE) --------------- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #preloader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s infinite cubic-bezier(0.55, 0.15, 0.45, 0.85);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(0.9); }
+            50% { transform: rotate(180deg) scale(1.1); box-shadow: 0 0 15px rgba(250, 177, 160, 0.4); }
+            100% { transform: rotate(360deg) scale(0.9); }
+        }
+
+        /* --------------- ADVANCED REVEAL ANIMATIONS --------------- */
+        .reveal { opacity: 0; transform: translateY(60px); transition: var(--transition); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .reveal-right { opacity: 0; transform: translateX(-80px); transition: var(--transition); }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-left { opacity: 0; transform: translateX(80px); transition: var(--transition); }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.5s; }
+        .delay-4 { transition-delay: 0.7s; }
 
         /* Navigation */
         nav {
             position: fixed; top: 0; width: 100%;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 25px 8%; z-index: 1000;
-            background: rgba(10, 10, 10, 0.9);
+            padding: 20px 8%; z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
+            animation: navSlideDown 1s ease 0.5s both;
         }
-        .logo { font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-family: 'Playfair Display'; }
-        .logo span { color: var(--accent); }
+
+        @keyframes navSlideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Dynamic Logo Wrapper */
+        .nav-logo-wrapper {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .nav-logo-wrapper:hover {
+            transform: scale(1.05);
+        }
+
         .nav-links { display: flex; list-style: none; }
         .nav-links li { position: relative; }
-        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; }
-
-        .dropdown:hover .dropdown-content { display: block; }
-        .dropdown-content {
-            display: none; position: absolute; background: #111; 
-            min-width: 180px; top: 100%; left: 30px; border: 1px solid #333; 
+        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; position: relative;}
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
         }
-        .dropdown-content a { margin: 0; padding: 12px 20px; display: block; border-bottom: 1px solid #222; text-transform: none; font-size: 0.75rem; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Dropdown Container */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            position: absolute; top: 120%; left: 20px; min-width: 200px;
+            background: rgba(15,15,15,0.98); border: 1px solid #2a2a2a;
+            backdrop-filter: blur(20px); opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.4s ease; padding: 10px 0;
+        }
+        .dropdown:hover .dropdown-content { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-content a::after { display: none; }
+        .dropdown-content a {
+            display: block; padding: 12px 25px; margin: 0; font-size: 0.8rem;
+            letter-spacing: 1px; color: #ddd; text-transform: none; transition: 0.3s ease;
+        }
+        .dropdown-content a:hover { background: #1a1a1a; color: var(--accent); padding-left: 35px; }
 
         /* Hero Section */
-        .hero {
+      .hero {
             height: 100vh;
             display: flex; align-items: center; justify-content: center;
             text-align: center;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1920');
+                        url('./src/assets/photo-1514362545857-3bc16c4c7d1b.webp');
             background-size: cover; background-attachment: fixed;
-        }
+      }
         .hero-content { max-width: 1000px; }
         .hero-content p { color: var(--accent); letter-spacing: 5px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 20px; }
         .hero-content h1 { font-size: 5rem; line-height: 1.1; margin-bottom: 40px; }
 
         .btn { padding: 18px 40px; text-decoration: none; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; transition: 0.4s; font-size: 0.75rem; display: inline-block; cursor: pointer; border: none; }
-        .btn-primary { background: var(--accent); color: var(--primary); }
+        .btn-primary { background: var(--accent); color: var(--primary); box-shadow: 0 5px 15px rgba(250, 177, 160, 0.2); }
         .btn-outline { border: 1px solid var(--white); color: var(--white); margin-left: 15px; }
-        .btn:hover { background: var(--white); color: var(--primary); transform: translateY(-5px); }
+        .btn:hover { background: var(--white); color: var(--primary); transform: translateY(-7px) scale(1.02); box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2); }
 
         /* Stats Bar */
-        .stats-bar { background: var(--accent); color: var(--primary); padding: 60px 8%; display: flex; justify-content: space-around; text-align: center; }
+        .stats-bar { background: var(--accent); color: var(--primary); padding: 60px 8%; display: flex; justify-content: space-around; text-align: center; overflow: hidden; }
         .stat-item h3 { font-size: 2.5rem; line-height: 1; margin-bottom: 5px; }
         .stat-item p { font-weight: bold; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
 
         /* Architecture Section */
-        .architecture { padding: 120px 8%; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .architecture { padding: 120px 8%; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; overflow-x: hidden; }
         .arch-img { position: relative; overflow: hidden; border: 1px solid var(--border); }
-        .arch-img img { width: 100%; transition: 1.5s; }
-        .arch-img:hover img { transform: scale(1.1); }
+        .arch-img img { width: 100%; transition: 1.8s cubic-bezier(0.2, 1, 0.3, 1); }
+        .arch-img:hover img { transform: scale(1.1) rotate(1deg); }
         .arch-text h2 { font-size: 3.5rem; color: var(--accent); margin-bottom: 30px; }
         .arch-text p { color: #aaa; margin-bottom: 30px; font-size: 1.1rem; }
 
-        /* NEW: THE PROCESS GRID */
+        /* THE PROCESS GRID */
         .process-section { padding: 100px 8%; background: var(--dark-gray); text-align: center; }
         .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 60px; }
-        .process-card { padding: 50px 20px; background: var(--primary); border: 1px solid var(--border); transition: 0.4s; }
-        .process-card:hover { border-color: var(--accent); transform: translateY(-10px); }
-        .process-card span { font-size: 3rem; color: rgba(250, 177, 160, 0.2); font-family: 'Playfair Display'; display: block; margin-bottom: 10px; }
+        .process-card { padding: 50px 20px; background: var(--primary); border: 1px solid var(--border); transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1); }
+        .process-card:hover { border-color: var(--accent); transform: translateY(-15px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .process-card span { font-size: 3rem; color: rgba(250, 177, 160, 0.2); font-family: 'Playfair Display'; display: block; margin-bottom: 10px; transition: 0.5s; }
+        .process-card:hover span { color: var(--accent); transform: scale(1.1); }
         .process-card h3 { font-size: 1.1rem; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; }
         .process-card p { font-size: 0.85rem; color: #777; }
 
-        /* NEW: CHEF'S CURATION (Horizontal Scroll Style) */
+        /* CHEF'S CURATION */
         .curation { padding: 120px 8%; }
         .curation-header { text-align: center; margin-bottom: 80px; }
         .curation-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-        .curation-card { background: var(--dark-gray); border: 1px solid var(--border); overflow: hidden; }
-        .curation-card img { width: 100%; height: 300px; object-fit: cover; filter: grayscale(50%); transition: 0.5s; }
-        .curation-card:hover img { filter: grayscale(0%); }
+        .curation-card { background: var(--dark-gray); border: 1px solid var(--border); overflow: hidden; transition: 0.5s; }
+        .curation-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(250, 177, 160, 0.1); border-color: rgba(250, 177, 160, 0.3); }
+        .curation-card img { width: 100%; height: 300px; object-fit: cover; filter: grayscale(70%); transition: 0.8s; }
+        .curation-card:hover img { filter: grayscale(0%) scale(1.05); }
         .curation-info { padding: 30px; }
         .curation-info h4 { font-size: 1.5rem; margin-bottom: 10px; }
         .curation-info span { color: var(--accent); font-weight: bold; font-size: 1.2rem; }
 
-        /* NEW: INFLUENCE SECTION */
-        .influence { padding: 100px 8%; background: linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600'); background-size: cover; background-attachment: fixed; text-align: center; }
+        /* INFLUENCE SECTION */
+        .influence { padding: 100px 8%; background: linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url("./src/assets/Tiered.webp"); background-size: cover; background-attachment: fixed; text-align: center; }
         .influence-content { max-width: 800px; margin: 0 auto; }
         .influence h2 { font-size: 3.5rem; margin-bottom: 30px; }
         .influence p { font-size: 1.2rem; color: #ccc; font-style: italic; margin-bottom: 40px; }
@@ -107,38 +224,69 @@
         footer { padding: 100px 8% 40px; background: var(--primary); border-top: 1px solid var(--border); }
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 50px; }
         .footer-col h4 { color: var(--accent); margin-bottom: 25px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
-        .footer-col a { display: block; color: #777; text-decoration: none; margin-bottom: 12px; font-size: 0.85rem; }
-        .footer-col a:hover { color: var(--accent); }
+        .footer-col a { display: block; color: #777; text-decoration: none; margin-bottom: 12px; font-size: 0.85rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); transform: translateX(8px); }
+
+        /* Hamburger */
+        .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+        .menu-toggle span { width: 25px; height: 2px; background: white; }
 
         @media (max-width: 992px) {
             .architecture, .process-grid, .curation-grid, .footer-grid { grid-template-columns: 1fr; }
             .hero-content h1 { font-size: 3rem; }
             .stats-bar { flex-direction: column; gap: 40px; }
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #111;
+                flex-direction: column; align-items: center; display: none;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links li { margin: 15px 0; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">STACK<span>LY.</span></div>
-        <ul class="nav-links">
-            <li class="dropdown">
-                <a href="index.html">Home <i class="fas fa-chevron-down" style="font-size:0.6rem"></i></a>
-                <div class="dropdown-content">
-                    <a href="index.html">Home 1</a>
-                    <a href="home2.html">Home 2</a>
-                </div>
-            </li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="service.html">Services</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-        </ul>
-    </nav>
+    <!-- CSS LOADING PRELOADER (SIMPLE SPINNING CIRCLE) -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+  <nav>
+    <a href="index.html" class="nav-logo-wrapper">
+        <!-- ICON EXTRACTED FROM IMAGE + CUSTOM TEXT NEXT TO IT -->
+        <img src="./src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+        <span class="brand-text">STACKLY</span>
+    </a>
+
+    <!-- Hamburger -->
+    <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+        <li class="dropdown">
+            <a href="index.html">
+                Home <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-content">
+                <a href="index.html">Home 1</a>
+                <a href="home2.html">Home 2</a>
+            </div>
+        </li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="service.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+</nav>
 
     <section class="hero">
         <div class="hero-content reveal">
+            <img
             <p>Masterfully Layered. Artfully Served.</p>
             <h1>Where Architecture<br>Meets Gastronomy.</h1>
             <div class="cta">
@@ -148,18 +296,21 @@
         </div>
     </section>
 
-    <section class="stats-bar reveal">
-        <div class="stat-item"><h3>90%</h3><p>Local Sourcing</p></div>
-        <div class="stat-item"><h3>24h</h3><p>Slow Curing</p></div>
-        <div class="stat-item"><h3>150k</h3><p>Stacks Served</p></div>
-        <div class="stat-item"><h3>05</h3><p>Global Landmarks</p></div>
+    <!-- Stats Bar using Slide Left Animation -->
+    <section class="stats-bar">
+        <div class="stat-item reveal-left delay-1"><h3>90%</h3><p>Local Sourcing</p></div>
+        <div class="stat-item reveal-left delay-2"><h3>24h</h3><p>Slow Curing</p></div>
+        <div class="stat-item reveal-left delay-3"><h3>150k</h3><p>Stacks Served</p></div>
+        <div class="stat-item reveal-left delay-4"><h3>05</h3><p>Global Landmarks</p></div>
     </section>
 
     <section class="architecture">
-        <div class="arch-img reveal">
-            <img src="https://images.unsplash.com/photo-1550966841-3ee32c84236b?w=800" alt="Culinary Architecture">
+        <!-- Image slides in from the right -->
+        <div class="arch-img reveal-right">
+            <img src="src/assets/big-event-hall-interior-restaurant.webp" alt="Culinary Architecture">
         </div>
-        <div class="arch-text reveal">
+        <!-- Text slides in from the left -->
+        <div class="arch-text reveal-left">
             <h2>Dimensional Dining</h2>
             <p>At Stackly, established in 2024, we don't believe in flat food. Our philosophy is rooted in the vertical journey—the idea that every forkful should contain a structural harmony of crisp, cream, heat, and acid.</p>
             <p>We bridge the gap between architectural precision and culinary soul, ensuring that how a dish is built is as vital as how it is seasoned.</p>
@@ -170,10 +321,10 @@
     <section class="process-section">
         <h2 class="section-title reveal">The Structural Method</h2>
         <div class="process-grid">
-            <div class="process-card reveal"><span>01</span><h3>Foundation</h3><p>Every stack begins with a 48-hour fermented base—whether sourdough or brioche.</p></div>
-            <div class="process-card reveal"><span>02</span><h3>Curing</h3><p>Proteins undergo a strict 24-hour slow-curing process for structural integrity.</p></div>
-            <div class="process-card reveal"><span>03</span><h3>Assembly</h3><p>Vertical layering ensures that every flavor profile remains distinct and vibrant.</p></div>
-            <div class="process-card reveal"><span>04</span><h3>The Finish</h3><p>Signature sauces are applied at the final second for millimetric accuracy.</p></div>
+            <div class="process-card reveal delay-1"><span>01</span><h3>Foundation</h3><p>Every stack begins with a 48-hour fermented base—whether sourdough or brioche.</p></div>
+            <div class="process-card reveal delay-2"><span>02</span><h3>Curing</h3><p>Proteins undergo a strict 24-hour slow-curing process for structural integrity.</p></div>
+            <div class="process-card reveal delay-3"><span>03</span><h3>Assembly</h3><p>Vertical layering ensures that every flavor profile remains distinct and vibrant.</p></div>
+            <div class="process-card reveal delay-4"><span>04</span><h3>The Finish</h3><p>Signature sauces are applied at the final second for millimetric accuracy.</p></div>
         </div>
     </section>
 
@@ -183,24 +334,24 @@
             <p style="color: #666; margin-top: 10px;">A selection of our most architecturally sound dishes.</p>
         </div>
         <div class="curation-grid">
-            <div class="curation-card reveal">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600" alt="The Zenith Stack">
+            <div class="curation-card reveal delay-1">
+                <img src="src/assets/13.webp" alt="The Zenith Stack">
                 <div class="curation-info">
                     <span>$34</span>
                     <h4>The Zenith Stack</h4>
                     <p style="color: #777; font-size: 0.9rem; margin-top: 10px;">Wagyu beef, truffle marrow, and gold-leaf microgreens.</p>
                 </div>
             </div>
-            <div class="curation-card reveal">
-                <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600" alt="Oceanic Pillar">
+            <div class="curation-card reveal delay-2">
+                <img src="src/assets/download.webp" alt="Oceanic Pillar">
                 <div class="curation-info">
                     <span>$28</span>
                     <h4>Oceanic Pillar</h4>
                     <p style="color: #777; font-size: 0.9rem; margin-top: 10px;">Seared scallops, black garlic purée, and sea-salt samphire.</p>
                 </div>
             </div>
-            <div class="curation-card reveal">
-                <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600" alt="Red Velvet Tower">
+            <div class="curation-card reveal delay-3">
+                <img src="src/assets/Tiered.webp" alt="Red Velvet Tower">
                 <div class="curation-info">
                     <span>$11</span>
                     <h4>Red Velvet Tower</h4>
@@ -218,13 +369,16 @@
         </div>
     </section>
 
-    <footer>
+    <footer class="reveal">
         <div class="footer-grid">
-            <div class="footer-col">
-                <h3 class="logo">STACK<span>LY.</span></h3>
+            <div class="footer-col reveal-right delay-1">
+                <a href="index.html" class="nav-logo-wrapper" style="margin-bottom: 20px;">
+                    <img src="./src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+                    <span class="brand-text">STACKLY</span>
+                </a>
                 <p style="color: #666; margin-top: 15px;">Redefining urban dining through the lens of architectural gastronomy.</p>
             </div>
-            <div class="footer-col">
+            <div class="footer-col reveal-right delay-2">
                 <h4>Explore</h4>
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -233,13 +387,13 @@
                 <a href="contact.html">Contact</a>
                 <a href="dashboard.html">Dashboard</a>
             </div>
-            <div class="footer-col">
+            <div class="footer-col reveal-right delay-3">
                 <h4>Visit</h4>
                 <p style="color: #777;">123 Culinary Ave, NY</p>
                 <p style="color: #777;">+1 (555) 987-6543</p>
                 <p style="color: #777;">hello@stackly.com</p>
             </div>
-            <div class="footer-col">
+            <div class="footer-col reveal-right delay-4">
                 <h4>Follow</h4>
                 <a href="#">Instagram</a>
                 <a href="#">Facebook</a>
@@ -250,14 +404,33 @@
     </footer>
 
     <script>
+        // Preloader Logic
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('preloader').classList.add('hide');
+            }, 800); // 0.8s loader duration
+        });
+
+        // Mobile Menu Toggle
+        const toggle = document.getElementById("menu-toggle");
+        const navLinks = document.getElementById("nav-links");
+        if (toggle && navLinks) {
+            toggle.addEventListener("click", () => { navLinks.classList.toggle("active"); });
+        }
+
+        // Advanced Intersection Observer for Scroll Animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }, { threshold: 0.15 });
+
+        // Selecting all elements to animate
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+            observer.observe(el);
+        });
     </script>
 </body>
 </html>

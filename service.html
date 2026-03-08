@@ -15,6 +15,7 @@
             --glass: rgba(255, 255, 255, 0.02);
             --border: rgba(255, 255, 255, 0.1);
             --glow: rgba(250, 177, 160, 0.1);
+            --transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,13 +25,94 @@
             font-family: 'Arial', sans-serif; 
             line-height: 1.6;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         h1, h2, h3 { font-family: 'Playfair Display', serif; letter-spacing: 1px; }
 
-        /* --- REVEAL ANIMATION --- */
-        .reveal { opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.2, 1, 0.3, 1); }
+        /* --------------- CSS LOGO CROPPING HELPER --------------- */
+        /* To show only the S icon part of the logo image - FIXED WIDTH & MARGIN */
+        .icon-only-logo {
+            width: 34px;          /* Reduced width to perfectly hide the text in the image */
+            height: 40px;         
+            object-fit: cover;
+            object-position: left center; 
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;   /* Added spacing between the icon and the text */
+        }
+
+        .brand-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--white);
+            vertical-align: middle;
+        }
+
+        /* Dynamic Logo Wrapper */
+        .nav-logo-wrapper {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-logo-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        /* --------------- PRELOADER (Spin Circle) --------------- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #preloader.hide { opacity: 0; visibility: hidden; }
+
+        .loader {
+            width: 60px; height: 60px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s infinite cubic-bezier(0.55, 0.15, 0.45, 0.85);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(0.9); }
+            50% { transform: rotate(180deg) scale(1.1); box-shadow: 0 0 15px rgba(250, 177, 160, 0.4); }
+            100% { transform: rotate(360deg) scale(0.9); }
+        }
+
+        /* --------------- ADVANCED REVEAL ANIMATIONS --------------- */
+        .reveal { opacity: 0; transform: translateY(60px); transition: var(--transition); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .reveal-zoom { opacity: 0; transform: scale(0.85); transition: var(--transition); }
+        .reveal-zoom.active { opacity: 1; transform: scale(1); }
+
+        .reveal-left { opacity: 0; transform: translateX(-80px); transition: var(--transition); }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-right { opacity: 0; transform: translateX(80px); transition: var(--transition); }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+
+        /* Staggered Delay */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
 
         /* --- NAVIGATION --- */
         nav {
@@ -40,19 +122,50 @@
             background: rgba(10, 10, 10, 0.9);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
+            animation: navSlideDown 1s ease 0.5s both;
         }
-        .logo { font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-family: 'Playfair Display'; }
-        .logo span { color: var(--accent); }
+
+        @keyframes navSlideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         .nav-links { display: flex; list-style: none; }
-        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; }
+        .nav-links li { position: relative; }
+        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; position: relative;}
 
-        .dropdown:hover .dropdown-content { display: block; }
-        .dropdown-content {
-            display: none; position: absolute; background: #111; 
-            min-width: 180px; top: 100%; left: 30px; border: 1px solid #333; 
+        /* Nav Hover Effect */
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0%; height: 2px; bottom: -5px; left: 0;
+            background-color: var(--accent); transition: width 0.3s ease;
         }
-        .dropdown-content a { margin: 0; padding: 12px 20px; display: block; border-bottom: 1px solid #222; text-transform: none; font-size: 0.75rem; }
+        .nav-links a:hover::after { width: 100%; }
 
+        /* Dropdown Container */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            position: absolute; top: 120%; left: 20px; min-width: 200px;
+            background: rgba(15,15,15,0.98); border: 1px solid #2a2a2a;
+            backdrop-filter: blur(20px); opacity: 0; visibility: hidden;
+            transform: translateY(10px); transition: all 0.3s ease; padding: 10px 0;
+        }
+        
+        /* Show on hover */
+        .dropdown:hover .dropdown-content { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-content a::after { display: none; }
+        
+        /* Dropdown Links */
+        .dropdown-content a {
+            display: block; padding: 12px 25px; margin: 0; font-size: 0.8rem;
+            letter-spacing: 1px; color: #ddd; text-transform: none; transition: 0.3s ease;
+        }
+
+        /* Hover Effect */
+        .dropdown-content a:hover { background: #1a1a1a; color: var(--accent); padding-left: 35px; }
+
+        /* Hamburger */
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .menu-toggle span { width: 25px; height: 2px; background: white; }
 
         /* --- HERO --- */
         .service-hero {
@@ -72,14 +185,16 @@
             background: var(--glass); border: 1px solid var(--border); padding: 60px 40px; 
             text-align: center; transition: 0.5s; position: relative; overflow: hidden;
         }
-        .service-card:hover { border-color: var(--accent); transform: translateY(-15px); }
-        .service-card i { font-size: 3rem; color: var(--accent); margin-bottom: 30px; display: block; }
+        .service-card:hover { border-color: var(--accent); transform: translateY(-15px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .service-card i { font-size: 3rem; color: var(--accent); margin-bottom: 30px; display: block; transition: 0.4s; }
+        .service-card:hover i { transform: scale(1.1); }
 
         /* --- THE ATELIER --- */
-        .atelier { background: var(--dark-gray); padding: 120px 8%; }
+        .atelier { background: var(--dark-gray); padding: 120px 8%; overflow-x: hidden; }
         .atelier-flex { display: flex; align-items: center; gap: 80px; }
         .atelier-img { flex: 1; height: 600px; overflow: hidden; border: 1px solid var(--border); }
-        .atelier-img img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s; }
+        .atelier-img img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s cubic-bezier(0.2, 1, 0.3, 1); }
+        .atelier-img:hover img { transform: scale(1.1) rotate(1deg); }
         .atelier-text { flex: 1; }
         .atelier-text h2 { font-size: 3.5rem; color: var(--accent); margin-bottom: 30px; }
 
@@ -91,88 +206,123 @@
         .marquee-content h2 span { color: var(--accent); -webkit-text-stroke: 0; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-100%); } }
 
-        /* --- NEW SECTION: THE LIQUID VAULT --- */
-        .liquid-vault { padding: 120px 8%; display: flex; flex-direction: row-reverse; align-items: center; gap: 80px; }
+        /* --- THE LIQUID VAULT --- */
+        .liquid-vault { padding: 120px 8%; display: flex; flex-direction: row-reverse; align-items: center; gap: 80px; overflow-x: hidden;}
         .vault-img { flex: 1; height: 600px; border: 1px solid var(--border); overflow: hidden; }
-        .vault-img img { width: 100%; height: 100%; object-fit: cover; }
+        .vault-img img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s cubic-bezier(0.2, 1, 0.3, 1);}
+        .vault-img:hover img { transform: scale(1.1) rotate(-1deg); }
         .vault-text { flex: 1; }
         .vault-text h2 { font-size: 3.5rem; color: var(--accent); margin-bottom: 25px; }
         .vault-text p { color: #888; margin-bottom: 20px; font-size: 1.1rem; }
 
-        /* --- NEW SECTION: SERVICE STANDARDS --- */
+        /* --- SERVICE STANDARDS --- */
         .standards { background: var(--dark-gray); padding: 100px 8%; text-align: center; }
         .standards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-top: 60px; }
         .standard-box { padding: 40px; border: 1px solid var(--border); transition: 0.4s; }
-        .standard-box:hover { border-color: var(--accent); background: var(--primary); }
-        .standard-box i { color: var(--accent); font-size: 1.8rem; margin-bottom: 20px; }
+        .standard-box:hover { border-color: var(--accent); background: var(--primary); transform: translateY(-10px); }
+        .standard-box i { color: var(--accent); font-size: 1.8rem; margin-bottom: 20px; transition: 0.4s; }
+        .standard-box:hover i { transform: scale(1.1); }
         .standard-box h4 { text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; }
 
         /* --- CATERING --- */
         .catering-3d { padding: 120px 8%; text-align: center; }
         .catering-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px; }
-        .c-card { height: 400px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 40px; position: relative; overflow: hidden; }
+        .c-card { height: 400px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 40px; position: relative; overflow: hidden; transition: 0.5s; border: 1px solid var(--border);}
+        .c-card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
         .c-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, #000, transparent); }
-        .c-info { position: relative; z-index: 2; text-align: left; }
+        .c-info { position: relative; z-index: 2; text-align: left; transition: 0.4s; }
+        .c-card:hover .c-info { transform: translateY(-10px); color: var(--accent); }
 
         /* --- FOOTER --- */
-        footer { padding: 100px 8% 40px; background: var(--primary); border-top: 1px solid var(--border); }
+        footer { padding: 100px 8% 40px; background: var(--primary); border-top: 1px solid var(--border); overflow: hidden;}
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1.5fr; gap: 80px; }
-        .footer-col a { display: block; color: #777; text-decoration: none; margin-bottom: 15px; }
+        .footer-col a, .footer-col p { display: block; color: #777; text-decoration: none; margin-bottom: 15px; font-size: 0.85rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); transform: translateX(8px); }
 
         @media (max-width: 1024px) {
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #111;
+                flex-direction: column; align-items: center; display: none;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links li { margin: 15px 0; }
+            .menu-toggle { display: flex; }
             .services-grid, .atelier-flex, .liquid-vault, .standards-grid, .catering-grid, .footer-grid { grid-template-columns: 1fr; }
             .liquid-vault { flex-direction: column; }
+            .service-hero h1 { font-size: 3.5rem; }
+            .atelier-flex { flex-direction: column; }
         }
     </style>
 </head>
 <body>
+
+    <!-- CSS PRELOADER ANIMATION -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
 <nav>
-        <div class="logo">STACK<span>LY.</span></div>
-        <ul class="nav-links">
-            <li class="dropdown">
-                <a href="index.html">Home <i class="fas fa-chevron-down" style="font-size:0.6rem"></i></a>
-                <div class="dropdown-content">
-                    <a href="index.html">Home Style 1</a>
-                    <a href="home2.html">Home Style 2</a>
-                </div>
-            </li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="service.html">Services</a></li>
-            <li><a href="contact.html" class="active-link">Contact</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-        </ul>
-    </nav>
+    <a href="index.html" class="nav-logo-wrapper">
+        <!-- ICON EXTRACTED FROM IMAGE + CUSTOM TEXT NEXT TO IT -->
+        <img src="src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+        <span class="brand-text">STACKLY</span>
+    </a>
+
+    <!-- Hamburger -->
+    <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+        <li class="dropdown">
+            <a href="index.html">
+                Home <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-content">
+                <a href="index.html">Home 1</a>
+                <a href="home2.html">Home 2</a>
+            </div>
+        </li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="service.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+</nav>
 
     <header class="service-hero">
-        <h1 class="reveal">Bespoke Hospitality</h1>
-        <p class="reveal">Architectural dining beyond the physical plate</p>
+        <h1 class="reveal-zoom">Bespoke Hospitality</h1>
+        <p class="reveal delay-1">Architectural dining beyond the physical plate</p>
     </header>
 
     <section class="services-grid">
-        <div class="service-card reveal">
+        <div class="service-card reveal delay-1">
             <i class="fas fa-layer-group"></i>
             <h3>The Tasting Stack</h3>
             <p>Curated 12-layer tasting menus designed for structural and flavor harmony.</p>
         </div>
-        <div class="service-card reveal" style="transition-delay: 0.2s;">
+        <div class="service-card reveal delay-2">
             <i class="fas fa-truck-loading"></i>
             <h3>Structural Delivery</h3>
             <p>Proprietary packaging ensuring your stack arrives precisely as the chef intended.</p>
         </div>
-        <div class="service-card reveal" style="transition-delay: 0.4s;">
+        <div class="service-card reveal delay-3">
             <i class="fas fa-chess-king"></i>
             <h3>Private Artistry</h3>
             <p>Bringing the Stackly kitchen theater to your estate for exclusive private events.</p>
         </div>
     </section>
 
+    <!-- THE ATELIER -->
     <section class="atelier">
         <div class="atelier-flex">
-            <div class="atelier-img reveal">
-                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1000" alt="Private Atelier">
+            <div class="atelier-img reveal-right delay-1">
+                <img src="./src/assets/Tropical.webp" alt="Private Atelier">
             </div>
-            <div class="atelier-text reveal">
+            <div class="atelier-text reveal-left delay-2">
                 <h2>The Private Atelier</h2>
                 <p style="color: #aaa; margin-bottom: 30px; font-size: 1.1rem;">A secluded dining chamber where the boundaries between kitchen and guest vanish.</p>
                 <a href="contact.html" style="color: var(--accent); text-decoration: none; font-weight: bold; letter-spacing: 2px;">SECURE THE VAULT →</a>
@@ -180,7 +330,7 @@
         </div>
     </section>
 
-    <section class="marquee-section">
+    <section class="marquee-section reveal">
         <div class="marquee-text">
             <div class="marquee-content">
                 <h2>CORPORATE <span>PARTNERSHIPS</span></h2>
@@ -197,47 +347,36 @@
         </div>
     </section>
 
+    <!-- THE LIQUID VAULT -->
     <section class="liquid-vault">
-        <div class="vault-img reveal">
-            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1000" alt="Architectural Cocktails">
-        </div>
-        <div class="vault-text reveal">
+        <div class="vault-text reveal-left delay-2">
             <h2>The Liquid Vault</h2>
             <p>Our beverage program mirrors our culinary philosophy: structural complexity in every glass. Explore a curated library of vertical mixology.</p>
             <p style="color: #666;">Featuring rare single-origin spirits and house-distilled botanical layers.</p>
             <a href="menu.html" style="color: var(--accent); text-decoration: none; font-weight: bold; margin-top: 20px; display: inline-block;">EXPLORE THE LIBRARY →</a>
         </div>
+        <div class="vault-img reveal-right delay-1">
+            <img src="./src/assets/Group.webp" alt="Architectural Cocktails">
+        </div>
     </section>
 
-    <section class="standards reveal">
-        <h2 style="font-size: 3rem;">Signature Service Standards</h2>
+    <section class="standards">
+        <h2 class="reveal-zoom" style="font-size: 3rem;">Signature Service Standards</h2>
         <div class="standards-grid">
-            <div class="standard-box">
-                <i class="fas fa-clock"></i>
-                <h4>Precision Timing</h4>
-            </div>
-            <div class="standard-box">
-                <i class="fas fa-fingerprint"></i>
-                <h4>Bespoke Curation</h4>
-            </div>
-            <div class="standard-box">
-                <i class="fas fa-shield-alt"></i>
-                <h4>Privacy Assurance</h4>
-            </div>
-            <div class="standard-box">
-                <i class="fas fa-gem"></i>
-                <h4>Luxury Integrity</h4>
-            </div>
+            <div class="standard-box reveal delay-1"><i class="fas fa-clock"></i><h4>Precision Timing</h4></div>
+            <div class="standard-box reveal delay-2"><i class="fas fa-fingerprint"></i><h4>Bespoke Curation</h4></div>
+            <div class="standard-box reveal delay-3"><i class="fas fa-shield-alt"></i><h4>Privacy Assurance</h4></div>
+            <div class="standard-box reveal delay-4"><i class="fas fa-gem"></i><h4>Luxury Integrity</h4></div>
         </div>
     </section>
 
     <section class="catering-3d">
         <h2 class="reveal" style="font-size: 3rem;">Global Event Landmarks</h2>
         <div class="catering-grid">
-            <div class="c-card reveal" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800');">
+            <div class="c-card reveal delay-1" style="background-image: url('./src/assets/A7.jpeg');">
                 <div class="c-info"><h3>Metropolitan Gala</h3></div>
             </div>
-            <div class="c-card reveal" style="background-image: url('https://images.unsplash.com/photo-1550966841-3ee32c84236b?w=800');">
+            <div class="c-card reveal delay-2" style="background-image: url('./src/assets/Zuma.webp');">
                 <div class="c-info"><h3>The Subterranean Feast</h3></div>
             </div>
         </div>
@@ -245,25 +384,44 @@
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-col">
-                <h3 class="logo">STACK<span>LY.</span></h3>
+            <div class="footer-col reveal-right delay-1">
+                <a href="index.html" class="nav-logo-wrapper" style="margin-bottom: 20px;">
+                    <img src="src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+                    <span class="brand-text">STACKLY</span>
+                </a>
                 <p style="color: #555; margin-top: 15px;">Redefining dining since 2024 through structural architecture.</p>
             </div>
-            <div class="footer-col">
-                <h4>Navigation</h4>
+            <div class="footer-col reveal-right delay-2">
+                <h4 style="color: var(--accent); margin-bottom: 25px; text-transform: uppercase;">Navigation</h4>
                 <a href="index.html"> Home</a>
                 <a href="menu.html"> Menu</a>
-               <a href="about.html">About</a>
+                <a href="about.html">About</a>
             </div>
-            <div class="footer-col">
-                <h4>Connect</h4>
-                <p style="color: #777;">123 Culinary Ave, NY<br>hello@stackly.com</p>
+            <div class="footer-col reveal-right delay-3">
+                <h4 style="color: var(--accent); margin-bottom: 25px; text-transform: uppercase;">Connect</h4>
+                <p style="color: #777; margin-bottom: 12px;">123 Culinary Ave, NY</p>
+                <a href="mailto:hello@stackly.com">hello@stackly.com</a>
             </div>
         </div>
-        <div style="text-align:center; padding-top: 60px; color: #333; font-size: 0.7rem;">&copy; 2026 STACKLY RESTAURANT GROUP. ALL RIGHTS RESERVED.</div>
+        <div class="reveal" style="text-align:center; padding-top: 60px; color: #333; font-size: 0.7rem; border-top: 1px solid var(--border); margin-top: 50px;">
+            &copy; 2026 STACKLY RESTAURANT GROUP. ALL RIGHTS RESERVED.
+        </div>
     </footer>
 
     <script>
+        // Preloader Logic
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('preloader').classList.add('hide');
+            }, 800); // Loader hides after 0.8 seconds
+        });
+
+        // Mobile Nav Toggle
+        const toggle = document.getElementById("menu-toggle");
+        const navLinks = document.getElementById("nav-links");
+        toggle.addEventListener("click", () => { navLinks.classList.toggle("active"); });
+
+        // Intersection Observer for Scroll Animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -271,7 +429,8 @@
                 }
             });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        document.querySelectorAll('.reveal, .reveal-zoom, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>

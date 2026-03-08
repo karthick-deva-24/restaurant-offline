@@ -13,36 +13,152 @@
             --white: #ffffff;
             --dark-gray: #111111;
             --border: rgba(255,255,255,0.1);
-            --transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+            --transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--primary); color: var(--white); font-family: 'Arial', sans-serif; line-height: 1.8; overflow-x: hidden; }
+        body { 
+            background-color: var(--primary); 
+            color: var(--white); 
+            font-family: 'Arial', sans-serif; 
+            line-height: 1.8; 
+            overflow-x: hidden; 
+            scroll-behavior: smooth;
+        }
+        
         h1, h2, h3 { font-family: 'Playfair Display', serif; letter-spacing: 1px; }
 
-        .reveal { opacity: 0; transform: translateY(40px); transition: var(--transition); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        /* --------------- CSS LOGO CROPPING HELPER --------------- */
+        /* To show only the S icon part of the logo image - FIXED WIDTH & MARGIN */
+        .icon-only-logo {
+            width: 34px;          /* Reduced width to perfectly hide the text in the image */
+            height: 40px;         
+            object-fit: cover;
+            object-position: left center; 
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;   /* Added spacing between the icon and the text */
+        }
 
+        .brand-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--white);
+            vertical-align: middle;
+        }
+
+        /* Dynamic Logo Wrapper */
+        .nav-logo-wrapper {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .nav-logo-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        /* --------------- PRELOADER (Spin Circle) --------------- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #preloader.hide { opacity: 0; visibility: hidden; }
+
+        .loader {
+            width: 60px; height: 60px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s infinite cubic-bezier(0.55, 0.15, 0.45, 0.85);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(0.9); }
+            50% { transform: rotate(180deg) scale(1.1); box-shadow: 0 0 15px rgba(250, 177, 160, 0.4); }
+            100% { transform: rotate(360deg) scale(0.9); }
+        }
+
+        /* --------------- ADVANCED REVEAL ANIMATIONS --------------- */
+        .reveal { opacity: 0; transform: translateY(60px); transition: var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .reveal-zoom { opacity: 0; transform: scale(0.85); transition: var(--transition); }
+        .reveal-zoom.active { opacity: 1; transform: scale(1); }
+
+        .reveal-left { opacity: 0; transform: translateX(-80px); transition: var(--transition); }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-right { opacity: 0; transform: translateX(80px); transition: var(--transition); }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+
+        /* Staggered Delay */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        /* Navigation */
         nav {
             position: fixed; top: 0; width: 100%;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 25px 8%; z-index: 1000;
-            background: rgba(10, 10, 10, 0.9);
+            padding: 20px 8%; z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
+            animation: navSlideDown 1s ease 0.5s both;
         }
-        .logo { font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-family: 'Playfair Display'; }
-        .logo span { color: var(--accent); }
+
+        @keyframes navSlideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
         .nav-links { display: flex; list-style: none; }
-        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; }
-
-        .dropdown:hover .dropdown-content { display: block; }
-        .dropdown-content {
-            display: none; position: absolute; background: #111; 
-            min-width: 180px; top: 100%; left: 30px; border: 1px solid #333; 
+        .nav-links li { position: relative; }
+        .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; position: relative; }
+        
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0%; height: 2px; bottom: -5px; left: 0;
+            background-color: var(--accent); transition: width 0.3s ease;
         }
-        .dropdown-content a { margin: 0; padding: 12px 20px; display: block; border-bottom: 1px solid #222; text-transform: none; font-size: 0.75rem; }
+        .nav-links a:hover::after { width: 100%; }
 
+        /* Dropdown Container */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            position: absolute; top: 120%; left: 20px; min-width: 200px;
+            background: rgba(15,15,15,0.98); border: 1px solid #2a2a2a;
+            backdrop-filter: blur(20px); opacity: 0; visibility: hidden;
+            transform: translateY(10px); transition: all 0.3s ease; padding: 10px 0;
+        }
+        .dropdown:hover .dropdown-content { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-content a::after { display: none; }
+        .dropdown-content a {
+            display: block; padding: 12px 25px; margin: 0; font-size: 0.8rem;
+            letter-spacing: 1px; color: #ddd; text-transform: none; transition: 0.3s ease;
+        }
+        .dropdown-content a:hover { background: #1a1a1a; color: var(--accent); padding-left: 35px; }
+
+        /* Hamburger */
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .menu-toggle span { width: 25px; height: 2px; background: white; }
+
+        /* Hero */
         .about-hero {
             height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1600');
@@ -51,90 +167,123 @@
         .about-hero h1 { font-size: 5rem; margin-bottom: 10px; }
         .about-hero p { color: var(--accent); text-transform: uppercase; letter-spacing: 5px; font-size: 0.9rem; }
 
-        .achievements-bar { background: var(--accent); color: var(--primary); padding: 60px 8%; display: flex; justify-content: space-around; text-align: center; }
+        .achievements-bar { background: var(--accent); color: var(--primary); padding: 60px 8%; display: flex; justify-content: space-around; text-align: center; overflow: hidden; }
         .achieve-item h3 { font-size: 2.5rem; line-height: 1; }
         .achieve-item p { font-weight: bold; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
 
         .goals-section { padding: 100px 8%; background: var(--dark-gray); }
         .goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
         .goal-card { padding: 50px; border: 1px solid var(--border); background: var(--primary); transition: 0.4s; }
-        .goal-card:hover { border-color: var(--accent); transform: translateY(-10px); }
-        .goal-card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 25px; display: block; }
+        .goal-card:hover { border-color: var(--accent); transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .goal-card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 25px; display: block; transition: 0.4s; }
+        .goal-card:hover i { transform: scale(1.1); }
 
-        .branch-section { padding: 120px 8%; border-bottom: 1px solid var(--border); }
+        .branch-section { padding: 120px 8%; border-bottom: 1px solid var(--border); overflow-x: hidden; }
         .branch-container { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: center; }
         .branch-section:nth-child(even) .branch-container { grid-template-columns: 0.8fr 1.2fr; }
         .branch-section:nth-child(even) .branch-img { order: 2; }
 
         .branch-img { position: relative; width: 100%; height: 500px; overflow: hidden; border: 1px solid var(--border); }
-        .branch-img img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s; }
-        .branch-img:hover img { transform: scale(1.1); }
+        .branch-img img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s cubic-bezier(0.2, 1, 0.3, 1); }
+        .branch-img:hover img { transform: scale(1.1) rotate(1deg); }
 
         .branch-text h2 { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
-        .special-food-box { padding: 30px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent); margin-top: 20px; }
+        .special-food-box { padding: 30px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent); margin-top: 20px; transition: 0.4s; }
+        .special-food-box:hover { background: rgba(255,255,255,0.05); transform: translateX(10px); }
 
         .team-section { padding: 100px 8%; text-align: center; }
         .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 50px; }
-        .team-role { padding: 30px; background: var(--dark-gray); border: 1px solid var(--border); }
+        .team-role { padding: 30px; background: var(--dark-gray); border: 1px solid var(--border); transition: 0.4s; }
+        .team-role:hover { border-color: var(--accent); transform: translateY(-10px); background: #1a1a1a; }
 
-        footer { padding: 80px 8% 40px; background: var(--primary); border-top: 1px solid #1a1a1a; }
+        footer { padding: 80px 8% 40px; background: var(--primary); border-top: 1px solid #1a1a1a; overflow: hidden;}
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 50px; }
         .footer-col h4 { color: var(--accent); margin-bottom: 25px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
-        .footer-col a { display: block; color: #777; text-decoration: none; margin-bottom: 12px; font-size: 0.85rem; }
+        .footer-col a, .footer-col p { display: block; color: #777; text-decoration: none; margin-bottom: 12px; font-size: 0.85rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); transform: translateX(8px); }
 
         @media (max-width: 992px) {
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #111;
+                flex-direction: column; align-items: center; display: none;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links li { margin: 15px 0; }
+            .menu-toggle { display: flex; }
             .branch-container, .goals-grid, .team-grid, .footer-grid { grid-template-columns: 1fr !important; }
+            .branch-section:nth-child(even) .branch-img { order: 0; }
             .achievements-bar { flex-direction: column; gap: 40px; }
+            .about-hero h1 { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- CSS PRELOADER ANIMATION -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
     <nav>
-        <div class="logo">STACK<span>LY.</span></div>
-        <ul class="nav-links">
+        <a href="index.html" class="nav-logo-wrapper">
+            <!-- ICON EXTRACTED FROM IMAGE + CUSTOM TEXT NEXT TO IT -->
+            <img src="src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+            <span class="brand-text">STACKLY</span>
+        </a>
+
+        <!-- Hamburger -->
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
             <li class="dropdown">
-                <a href="index.html">Home <i class="fas fa-chevron-down" style="font-size:0.6rem"></i></a>
+                <a href="index.html">
+                    Home <i class="fas fa-chevron-down"></i>
+                </a>
                 <div class="dropdown-content">
-                    <a href="index.html">Home Style 1</a>
-                    <a href="home2.html">Home Style 2</a>
+                    <a href="index.html">Home 1</a>
+                    <a href="home2.html">Home 2</a>
                 </div>
             </li>
             <li><a href="about.html">About</a></li>
             <li><a href="menu.html">Menu</a></li>
             <li><a href="service.html">Services</a></li>
-            <li><a href="contact.html" class="active-link">Contact</a></li>
+            <li><a href="contact.html">Contact</a></li>
             <li><a href="dashboard.html">Dashboard</a></li>
         </ul>
     </nav>
 
     <header class="about-hero">
-        <h1 class="reveal">The Vertical Soul</h1>
-        <p class="reveal">Architecting culinary wonders since 2024</p>
+        <h1 class="reveal-zoom">The Vertical Soul</h1>
+        <p class="reveal delay-1">Architecting culinary wonders since 2024</p>
     </header>
 
-    <section class="achievements-bar reveal">
-        <div class="achieve-item"><h3>05</h3><p>Global Branches</p></div>
-        <div class="achieve-item"><h3>12+</h3><p>Industry Awards</p></div>
-        <div class="achieve-item"><h3>150k</h3><p>Stacks Served</p></div>
-        <div class="achieve-item"><h3>90%</h3><p>Local Sourcing</p></div>
+    <section class="achievements-bar">
+        <div class="achieve-item reveal-left delay-1"><h3>05</h3><p>Global Branches</p></div>
+        <div class="achieve-item reveal-left delay-2"><h3>12+</h3><p>Industry Awards</p></div>
+        <div class="achieve-item reveal-left delay-3"><h3>150k</h3><p>Stacks Served</p></div>
+        <div class="achieve-item reveal-left delay-4"><h3>90%</h3><p>Local Sourcing</p></div>
     </section>
 
     <section class="goals-section">
         <h2 style="text-align: center; font-size: 3rem; margin-bottom: 60px;" class="reveal">Strategic Milestones</h2>
         <div class="goals-grid">
-            <div class="goal-card reveal"><i class="fas fa-leaf"></i><h3>Zero Waste</h3><p>Achieving a circular kitchen economy by 2027.</p></div>
-            <div class="goal-card reveal"><i class="fas fa-microchip"></i><h3>Thermal Tech</h3><p>Precision mapping for perfect vertical integrity.</p></div>
-            <div class="goal-card reveal"><i class="fas fa-users"></i><h3>Urban Sourcing</h3><p>Partnering with 50+ local vertical farms.</p></div>
+            <div class="goal-card reveal delay-1"><i class="fas fa-leaf"></i><h3>Zero Waste</h3><p>Achieving a circular kitchen economy by 2027.</p></div>
+            <div class="goal-card reveal delay-2"><i class="fas fa-microchip"></i><h3>Thermal Tech</h3><p>Precision mapping for perfect vertical integrity.</p></div>
+            <div class="goal-card reveal delay-3"><i class="fas fa-users"></i><h3>Urban Sourcing</h3><p>Partnering with 50+ local vertical farms.</p></div>
         </div>
     </section>
 
+    <!-- BRANCH ONE -->
     <section class="branch-section">
         <div class="branch-container">
-            <div class="branch-img reveal">
-                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1000" alt="Manhattan Flagship">
+            <div class="branch-img reveal-right delay-1">
+                <img src="src/assets/d6.webp" alt="Manhattan Flagship">
             </div>
-            <div class="branch-text reveal">
+            <div class="branch-text reveal-left delay-2">
                 <h4>EST. 2024 | NEW YORK</h4>
                 <h2>Manhattan Flagship</h2>
                 <p>The original kitchen theater in the heart of NY, where industrial architecture meets the pinnacle of luxury dining.</p>
@@ -147,12 +296,10 @@
         </div>
     </section>
 
+    <!-- BRANCH TWO -->
     <section class="branch-section" style="background: var(--dark-gray);">
         <div class="branch-container">
-            <div class="branch-img reveal">
-                <img src="https://images.unsplash.com/photo-1550966841-3ee32c84236b?w=1000" alt="Barcelona Pavilion">
-            </div>
-            <div class="branch-text reveal">
+            <div class="branch-text reveal-left delay-2">
                 <h4>EST. 2025 | BARCELONA</h4>
                 <h2>The Barcelona Pavilion</h2>
                 <p>A Mediterranean laboratory focused on coastal layering and structural seafood geometry in the Gothic Quarter.</p>
@@ -162,15 +309,19 @@
                     <p>Chorizo pillars, saffron potato pavé, and fire-roasted peppers.</p>
                 </div>
             </div>
+            <div class="branch-img reveal-right delay-1">
+                <img src="./src/assets/d7.webp" alt="Barcelona Pavilion">
+            </div>
         </div>
     </section>
 
+    <!-- BRANCH THREE -->
     <section class="branch-section">
         <div class="branch-container">
-            <div class="branch-img reveal">
-                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1000" alt="Tokyo Loft">
+            <div class="branch-img reveal-right delay-1">
+                <img src="./src/assets/d8.webp" alt="Tokyo Loft">
             </div>
-            <div class="branch-text reveal">
+            <div class="branch-text reveal-left delay-2">
                 <h4>EST. 2025 | TOKYO</h4>
                 <h2>The Tokyo Loft</h2>
                 <p>Minimalism meets gravity-defying seafood techniques high above the neon lights of Shibuya.</p>
@@ -183,12 +334,10 @@
         </div>
     </section>
 
+    <!-- BRANCH FOUR -->
     <section class="branch-section" style="background: var(--dark-gray);">
         <div class="branch-container">
-            <div class="branch-img reveal">
-                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1000" alt="Dubai Spire">
-            </div>
-            <div class="branch-text reveal">
+            <div class="branch-text reveal-left delay-2">
                 <h4>EST. 2026 | DUBAI</h4>
                 <h2>The Dubai Spire</h2>
                 <p>Ascending into the skyline, the Spire branch utilizes high-altitude pressure techniques to create exceptionally light structural textures.</p>
@@ -198,15 +347,19 @@
                     <p>Gold-leaf infused honey, spiced dates, and structural pistachio sponge layers.</p>
                 </div>
             </div>
+            <div class="branch-img reveal-right delay-1">
+                <img src="./src/assets/8.webp" alt="Dubai Spire">
+            </div>
         </div>
     </section>
 
+    <!-- BRANCH FIVE -->
     <section class="branch-section">
         <div class="branch-container">
-            <div class="branch-img reveal">
-                <img src="https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?w=1000" alt="Sydney Wharf">
+            <div class="branch-img reveal-right delay-1">
+                <img src="./src/assets/a6.webp" alt="Sydney Wharf">
             </div>
-            <div class="branch-text reveal">
+            <div class="branch-text reveal-left delay-2">
                 <h4>EST. 2026 | SYDNEY</h4>
                 <h2>The Sydney Wharf</h2>
                 <p>A waterfront marvel at Circular Quay, integrating oceanic materials and curved architectural plating into our vertical philosophy.</p>
@@ -220,25 +373,47 @@
     </section>
 
     <section class="team-section">
-        <h2 style="font-size: 3.5rem;" class="reveal">Synergetic Artistry</h2>
+        <h2 style="font-size: 3.5rem;" class="reveal-zoom">Synergetic Artistry</h2>
         <div class="team-grid">
-            <div class="team-role reveal"><h3>The Architects</h3><p>Blueprint & flavor profile design.</p></div>
-            <div class="team-role reveal"><h3>The Engineers</h3><p>Precision fermentation & curing.</p></div>
-            <div class="team-role reveal"><h3>The Curators</h3><p>Liquid layering & wine pairing.</p></div>
-            <div class="team-role reveal"><h3>The Builders</h3><p>Millimetric structural assembly.</p></div>
+            <div class="team-role reveal delay-1"><h3>The Architects</h3><p>Blueprint & flavor profile design.</p></div>
+            <div class="team-role reveal delay-2"><h3>The Engineers</h3><p>Precision fermentation & curing.</p></div>
+            <div class="team-role reveal delay-3"><h3>The Curators</h3><p>Liquid layering & wine pairing.</p></div>
+            <div class="team-role reveal delay-4"><h3>The Builders</h3><p>Millimetric structural assembly.</p></div>
         </div>
     </section>
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-col"><h3 class="logo">STACK<span>LY.</span></h3><p>Every layer tells a story.</p></div>
-            <div class="footer-col"><h4>Explore</h4><a href="index.html">Home</a><a href="about.html">About</a></div>
-            <div class="footer-col"><h4>Connect</h4><p>123 Culinary Ave, NY<br>hello@stackly.com</p></div>
-            <div class="footer-col"><h4>Social</h4><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+            <div class="footer-col reveal-left delay-1">
+                <a href="index.html" class="nav-logo-wrapper" style="margin-bottom: 20px;">
+                    <img src="src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+                    <span class="brand-text">STACKLY</span>
+                </a>
+                <p style="margin-top:15px;color:#666;">Every layer tells a story.</p>
+            </div>
+            <div class="footer-col reveal-left delay-2"><h4>Explore</h4><a href="index.html">Home</a><a href="about.html">About</a></div>
+            <div class="footer-col reveal-left delay-3"><h4>Connect</h4><p>123 Culinary Ave, NY</p><p>hello@stackly.com</p></div>
+            <div class="footer-col reveal-left delay-4"><h4>Social</h4><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+        </div>
+        <div class="reveal" style="text-align:center; padding-top: 50px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 50px; color: #444; font-size: 0.7rem; letter-spacing: 1px;">
+            &copy; 2026 STACKLY RESTAURANT GROUP. EXPERTLY STACKED. EXPERTLY SERVED.
         </div>
     </footer>
 
     <script>
+        // Preloader Logic
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('preloader').classList.add('hide');
+            }, 800);
+        });
+
+        // Mobile Nav Toggle
+        const toggle = document.getElementById("menu-toggle");
+        const navLinks = document.getElementById("nav-links");
+        toggle.addEventListener("click", () => { navLinks.classList.toggle("active"); });
+
+        // Intersection Observer for Animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -246,7 +421,8 @@
                 }
             });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        document.querySelectorAll('.reveal, .reveal-zoom, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
