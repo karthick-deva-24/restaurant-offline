@@ -31,15 +31,14 @@
         h1, h2, h3 { font-family: 'Playfair Display', serif; letter-spacing: 1px; }
 
         /* --------------- CSS LOGO CROPPING HELPER --------------- */
-        /* To show only the S icon part of the logo image - FIXED WIDTH & MARGIN */
         .icon-only-logo {
-            width: 34px;          /* Reduced width to perfectly hide the text in the image */
+            width: 34px;          
             height: 40px;         
             object-fit: cover;
             object-position: left center; 
             display: inline-block;
             vertical-align: middle;
-            margin-right: 10px;   /* Added spacing between the icon and the text */
+            margin-right: 10px;   
         }
 
         .brand-text {
@@ -52,7 +51,6 @@
             vertical-align: middle;
         }
 
-        /* Dynamic Logo Wrapper */
         .nav-logo-wrapper {
             display: flex;
             align-items: center;
@@ -108,7 +106,6 @@
         .reveal-right { opacity: 0; transform: translateX(80px); transition: var(--transition); }
         .reveal-right.active { opacity: 1; transform: translateX(0); }
 
-        /* Staggered Delay */
         .delay-1 { transition-delay: 0.1s; }
         .delay-2 { transition-delay: 0.2s; }
         .delay-3 { transition-delay: 0.3s; }
@@ -130,11 +127,10 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        .nav-links { display: flex; list-style: none; }
+        .nav-links { display: flex; list-style: none; align-items: center; }
         .nav-links li { position: relative; }
         .nav-links a { margin-left: 30px; text-decoration: none; color: var(--white); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; position: relative;}
 
-        /* Nav Hover Effect */
         .nav-links a::after {
             content: ''; position: absolute; width: 0%; height: 2px; bottom: -5px; left: 0;
             background-color: var(--accent); transition: width 0.3s ease;
@@ -150,22 +146,58 @@
             transform: translateY(10px); transition: all 0.3s ease; padding: 10px 0;
         }
         
-        /* Show on hover */
         .dropdown:hover .dropdown-content { opacity: 1; visibility: visible; transform: translateY(0); }
         .dropdown-content a::after { display: none; }
         
-        /* Dropdown Links */
         .dropdown-content a {
             display: block; padding: 12px 25px; margin: 0; font-size: 0.8rem;
             letter-spacing: 1px; color: #ddd; text-transform: none; transition: 0.3s ease;
         }
 
-        /* Hover Effect */
         .dropdown-content a:hover { background: #1a1a1a; color: var(--accent); padding-left: 35px; }
 
         /* Hamburger */
         .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
         .menu-toggle span { width: 25px; height: 2px; background: white; }
+
+        /* --- LOGIN BUTTON --- */
+        .theme-btn {
+            background: #fff; color: #000; border: none; padding: 10px 20px;
+            font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 5px; transition: all 0.3s ease;
+            margin-left: 30px; font-family: 'Arial', sans-serif;
+        }
+        .theme-btn:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(250, 177, 160, 0.3); }
+
+        /* --- LOGIN MODAL STYLES --- */
+        .login-popup {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8); display:flex; justify-content:center;
+            align-items:center; opacity:0; visibility:hidden; transition:0.4s; z-index:10000;
+        }
+        .login-popup.active{ opacity:1; visibility:visible; }
+        
+        .login-box {
+            position: relative; background: #111; padding: 40px; width: 330px;
+            text-align: center; border: 1px solid #444; transform: translateY(-20px); transition: transform 0.4s ease;
+        }
+        .login-popup.active .login-box { transform: translateY(0); }
+        .login-box h2 { margin-bottom: 20px; font-family: 'Playfair Display', serif;}
+        .login-box input { width: 100%; padding: 10px; margin: 10px 0; background: #000; border: 1px solid #555; color: #fff; outline: none; transition: border-color 0.3s;}
+        .login-box input:focus { border-color: var(--accent); }
+        .login-box button {
+            width: 100%; padding: 12px; margin-top: 5px; background: #ffffff; color: #000;
+            border: none; cursor: pointer; font-weight: 600; letter-spacing: 1px;
+            text-transform: uppercase; transition: 0.3s;
+        }
+        .login-box button:hover { background: var(--accent); color: #000; }
+        .close-btn { position: absolute; top: 12px; right: 15px; cursor: pointer; color: #fff; font-size: 20px; font-weight: bold; }
+        
+        .login-links { display: flex; justify-content: space-between; margin-top: 18px; font-size: 0.85rem; }
+        .login-links a { color: #aaa; text-decoration: none; transition: 0.3s; }
+        .login-links a:hover { color: var(--accent); text-decoration: underline; }
+        .login-box p.info-text { color: #aaa; font-size: 0.85rem; margin-bottom: 20px; text-align: left; line-height: 1.4; }
+        
+        .error-text { color: #ff4d4f; font-size: 0.85rem; text-align: left; margin-top: -5px; margin-bottom: 10px; display: none; }
 
         /* --- HERO --- */
         .service-hero {
@@ -234,18 +266,21 @@
         .c-card:hover .c-info { transform: translateY(-10px); color: var(--accent); }
 
         /* --- FOOTER --- */
-        footer { padding: 100px 8% 40px; background: var(--primary); border-top: 1px solid var(--border); overflow: hidden;}
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1.5fr; gap: 80px; }
-        .footer-col a, .footer-col p { display: block; color: #777; text-decoration: none; margin-bottom: 15px; font-size: 0.85rem; transition: 0.3s; }
+         footer { padding: 100px 8% 40px; background: var(--primary); border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 50px; }
+        .footer-col h4 { color: var(--accent); margin-bottom: 25px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
+        .footer-col a { display: block; color: #777; text-decoration: none; margin-bottom: 12px; font-size: 0.85rem; transition: 0.3s; }
         .footer-col a:hover { color: var(--accent); transform: translateX(8px); }
 
         @media (max-width: 1024px) {
             .nav-links {
                 position: absolute; top: 100%; left: 0; width: 100%; background: #111;
-                flex-direction: column; align-items: center; display: none;
+                flex-direction: column; align-items: center; display: none; padding: 20px 0;
             }
             .nav-links.active { display: flex; }
             .nav-links li { margin: 15px 0; }
+            .nav-links a { margin-left: 0; }
+            .theme-btn { margin-left: 0; margin-top: 10px; }
             .menu-toggle { display: flex; }
             .services-grid, .atelier-flex, .liquid-vault, .standards-grid, .catering-grid, .footer-grid { grid-template-columns: 1fr; }
             .liquid-vault { flex-direction: column; }
@@ -261,37 +296,79 @@
         <div class="loader"></div>
     </div>
 
-<nav>
-    <a href="index.html" class="nav-logo-wrapper">
-        <!-- ICON EXTRACTED FROM IMAGE + CUSTOM TEXT NEXT TO IT -->
-        <img src="src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
-        <span class="brand-text">STACKLY</span>
-    </a>
-
-    <!-- Hamburger -->
-    <div class="menu-toggle" id="menu-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
+    <!-- LOGIN POPUP MODEL -->
+    <div id="loginPopup" class="login-popup">
+        <!-- Main Login View -->
+        <div class="login-box" id="loginView">
+          <span class="close-btn" onclick="closeLogin()">✕</span>
+          <h2>Login</h2>
+          <input type="text" id="username" placeholder="Username">
+          <input type="password" id="password" placeholder="Password">
+          <button onclick="login()">Login</button>
+          <div class="login-links">
+            <a href="javascript:void(0)" onclick="toggleView('forgotPasswordView')">Forgot Password?</a>
+            <a href="javascript:void(0)" onclick="toggleView('createAccountView')">Create Account</a>
+          </div>
+        </div>
+        <!-- Forgot Password View -->
+        <div class="login-box" id="forgotPasswordView" style="display: none;">
+          <span class="close-btn" onclick="closeLogin()">✕</span>
+          <h2>Forgot Password</h2>
+          <p class="info-text">Enter your email address to reset your password and secure your private vault.</p>
+          <input type="email" id="resetEmail" placeholder="Email Address" oninput="hideError('forgotError')">
+          <div class="error-text" id="forgotError">Email not found.</div>
+          <button onclick="resetPassword()">Reset</button>
+          <div class="login-links" style="justify-content: center;">
+            <a href="javascript:void(0)" onclick="toggleView('loginView')">Back to Login</a>
+          </div>
+        </div>
+        <!-- Create Account View -->
+        <div class="login-box" id="createAccountView" style="display: none;">
+          <span class="close-btn" onclick="closeLogin()">✕</span>
+          <h2>Create Account</h2>
+          <input type="text" id="newUsername" placeholder="Username" oninput="hideError('createError')">
+          <input type="email" id="newEmail" placeholder="Email Address" oninput="hideError('createError')">
+          <input type="password" id="newPassword" placeholder="Password" oninput="hideError('createError')">
+          <div class="error-text" id="createError">Registration failed.</div>
+          <button onclick="createAccount()">Sign Up</button>
+          <div class="login-links" style="justify-content: center;">
+            <a href="javascript:void(0)" onclick="toggleView('loginView')">Already have an account? Login</a>
+          </div>
+        </div>
     </div>
 
-    <ul class="nav-links" id="nav-links">
-        <li class="dropdown">
-            <a href="index.html">
-                Home <i class="fas fa-chevron-down"></i>
-            </a>
-            <div class="dropdown-content">
-                <a href="index.html">Home 1</a>
-                <a href="home2.html">Home 2</a>
-            </div>
-        </li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="menu.html">Menu</a></li>
-        <li><a href="service.html">Services</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="dashboard.html">Dashboard</a></li>
-    </ul>
-</nav>
+    <!-- NAVBAR WITH LOGIN BUTTON -->
+    <nav>
+        <a href="index.html" class="nav-logo-wrapper">
+            <img src="src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+            <span class="brand-text">STACKLY</span>
+        </a>
+
+        <!-- Hamburger -->
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
+            <li class="dropdown">
+                <a href="index.html">
+                    Home <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="dropdown-content">
+                    <a href="index.html">Home 1</a>
+                    <a href="home2.html">Home 2</a>
+                </div>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="service.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><button class="theme-btn" onclick="openLogin()">LOGIN</button></li>
+        </ul>
+    </nav>
 
     <header class="service-hero">
         <h1 class="reveal-zoom">Bespoke Hospitality</h1>
@@ -382,33 +459,53 @@
         </div>
     </section>
 
-    <footer>
+     <footer class="reveal">
         <div class="footer-grid">
             <div class="footer-col reveal-right delay-1">
                 <a href="index.html" class="nav-logo-wrapper" style="margin-bottom: 20px;">
-                    <img src="src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
+                    <img src="./src/assets/stackly jpg.webp" alt="Icon" class="icon-only-logo">
                     <span class="brand-text">STACKLY</span>
                 </a>
-                <p style="color: #555; margin-top: 15px;">Redefining dining since 2024 through structural architecture.</p>
+                <p style="color: #666; margin-top: 15px;">Redefining urban dining through the lens of architectural gastronomy.</p>
             </div>
             <div class="footer-col reveal-right delay-2">
-                <h4 style="color: var(--accent); margin-bottom: 25px; text-transform: uppercase;">Navigation</h4>
-                <a href="index.html"> Home</a>
-                <a href="menu.html"> Menu</a>
+                <h4>Explore</h4>
+                <a href="index.html">Home</a>
                 <a href="about.html">About</a>
+                <a href="menu.html">Menu</a>
+                <a href="service.html">Services</a>
+                <a href="contact.html">Contact</a>
+                <a href="dashboard.html">Dashboard</a>
             </div>
             <div class="footer-col reveal-right delay-3">
-                <h4 style="color: var(--accent); margin-bottom: 25px; text-transform: uppercase;">Connect</h4>
-                <p style="color: #777; margin-bottom: 12px;">123 Culinary Ave, NY</p>
-                <a href="mailto:hello@stackly.com">hello@stackly.com</a>
+                <h4>Visit</h4>
+                <p style="color: #777;">123 Culinary Ave, NY</p>
+                <p style="color: #777;">+1 (555) 987-6543</p>
+                <p style="color: #777;">hello@stackly.com</p>
+            </div>
+            <div class="footer-col reveal-right delay-4">
+                <h4>Follow</h4>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">LinkedIn</a>
             </div>
         </div>
-        <div class="reveal" style="text-align:center; padding-top: 60px; color: #333; font-size: 0.7rem; border-top: 1px solid var(--border); margin-top: 50px;">
-            &copy; 2026 STACKLY RESTAURANT GROUP. ALL RIGHTS RESERVED.
-        </div>
+        <div style="text-align:center; padding-top: 50px; color: #444; font-size: 0.7rem;">&copy; 2026 STACKLY RESTAURANT GROUP. ALL RIGHTS RESERVED.</div>
     </footer>
 
+    <!-- 404 ERROR PAGE OVERLAY -->
+    <div id="errorPage" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#0a0a0a; color:white; justify-content:center; align-items:center; flex-direction:column; z-index:11000; text-align:center;">
+        <h1 style="font-size:120px;color:#fab1a0;">404</h1>
+        <p style="color:#aaa;margin-bottom:30px;">Page Not Found</p>
+        <button onclick="goBack()" style="padding:12px 30px; background:#fff; color:#000; border:none; font-weight:bold; cursor:pointer;">Go Back</button>
+    </div>
+
+    <!-- SCRIPTS -->
     <script>
+        // Error Page Functions
+        function showErrorPage() { document.getElementById("errorPage").style.display="flex"; }
+        function goBack() { document.getElementById("errorPage").style.display="none"; }
+
         // Preloader Logic
         window.addEventListener('load', function() {
             setTimeout(function() {
@@ -431,6 +528,59 @@
         }, { threshold: 0.1 });
         
         document.querySelectorAll('.reveal, .reveal-zoom, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+
+        /* --- Login Modal & Error Logic --- */
+        function hideError(id) { document.getElementById(id).style.display = "none"; }
+      
+        function toggleView(viewId) {
+            document.getElementById("loginView").style.display = "none";
+            document.getElementById("forgotPasswordView").style.display = "none";
+            document.getElementById("createAccountView").style.display = "none";
+            document.getElementById(viewId).style.display = "block";
+            hideError('forgotError'); hideError('createError');
+        }
+        
+        function openLogin() {
+            document.getElementById("loginPopup").classList.add("active");
+            toggleView('loginView');
+        }
+        
+        function closeLogin() {
+            document.getElementById("loginPopup").classList.remove("active");
+            hideError('forgotError'); hideError('createError');
+        }
+        
+        function login() {
+            let user = document.getElementById("username").value;
+            let pass = document.getElementById("password").value;
+            if (user == "admin" && pass == "1234") {
+                alert("Login Successful"); closeLogin();
+            } else {
+                closeLogin(); showErrorPage();
+            }
+        }
+        
+        function resetPassword() {
+            let email = document.getElementById("resetEmail").value;
+            let errorEl = document.getElementById("forgotError");
+            if(email === "") {
+                errorEl.innerText = "Please enter an email address."; errorEl.style.display = "block";
+            } else {
+                closeLogin(); showErrorPage();
+            }
+        }
+        
+        function createAccount() {
+            let user = document.getElementById("newUsername").value;
+            let email = document.getElementById("newEmail").value;
+            let pass = document.getElementById("newPassword").value;
+            let errorEl = document.getElementById("createError");
+            if(user === "" || email === "" || pass === "") {
+                errorEl.innerText = "Please fill all the details."; errorEl.style.display = "block";
+            } else {
+                closeLogin(); showErrorPage();
+            }
+        }
     </script>
 </body>
 </html>
